@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    dependencies:
+      00-chat:
+        specifier: workspace:*
+        version: link:samples/00-chat
 
   samples/00-chat:
     dependencies:
