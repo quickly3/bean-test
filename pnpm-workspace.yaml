@@ -1,5 +1,2 @@
 packages:
-  - samples/*
-
-exclude:
-  - node_modules
+  - 'samples/**'
