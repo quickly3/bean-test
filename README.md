@@ -18,6 +18,7 @@ sql typeorm demo
 [24-serve-static](https://github.com/quickly3/nest-samples/tree/main/samples/24-serve-static) 
 将nestjs同时作为静态和api服务器
 [33-graphql-mercurius](https://github.com/quickly3/nest-samples/tree/main/samples/33-graphql-mercurius)
+Simple Mercurius & Graphql sample
 [34-passport-auth](https://github.com/quickly3/nest-samples/tree/main/samples/34-passport-auth) 
 Simple access samples by passport local | jwt | headerApiKey
 
