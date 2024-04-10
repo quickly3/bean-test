@@ -1,7 +1,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) 使用GPRC开发C/S 架构的例子
+[Nest](https://github.com/nestjs/nest) 将nestjs同时作为静态和api服务器
 
 ## Installation
 

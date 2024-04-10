@@ -1,7 +1,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) 使用GPRC开发C/S 架构的例子
+[Nest](https://github.com/nestjs/nest) 基于hbs的后端渲染前端模板的技术
 
 ## Installation
 
