@@ -6,6 +6,7 @@ import { Controller, Get, UseInterceptors } from '@nestjs/common';
 export class AppController {
   @Get()
   findAll() {
+    console.log(1);
     return [{ id: 1, name: 'Nest' }];
   }
 }
