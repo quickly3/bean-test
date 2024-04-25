@@ -1,6 +1,12 @@
-import { Body, Controller, HttpCode, Post, Query } from '@nestjs/common';
 import {
-  Client,
+  Body,
+  Controller,
+  HttpCode,
+  Inject,
+  Post,
+  Query,
+} from '@nestjs/common';
+import {
   ClientProxy,
   Ctx,
   EventPattern,
@@ -8,7 +14,6 @@ import {
   MqttContext,
   MqttRecordBuilder,
   Payload,
-  Transport,
 } from '@nestjs/microservices';
 import { from, lastValueFrom, Observable, of } from 'rxjs';
 import { scan } from 'rxjs/operators';
@@ -21,8 +26,15 @@ export class MqttController {
   static IS_SHARED_WILDCARD_EVENT_RECEIVED = false;
   static IS_SHARED_WILDCARD2_EVENT_RECEIVED = false;
 
-  @Client({ transport: Transport.MQTT })
-  client: ClientProxy;
+  // @Client({
+  //   transport: Transport.MQTT,
+  //   options: {
+  //     url: 'mqtt://127.0.0.1:1883',
+  //   },
+  // })
+  // client: ClientProxy;
+
+  constructor(@Inject('MQTT_SERVICE') private client: ClientProxy) {}
 
   @Post()
   @HttpCode(200)
@@ -30,7 +42,7 @@ export class MqttController {
     @Query('command') cmd,
     @Body() data: number[],
   ): Promise<Observable<number>> {
-    await this.client.connect();
+    console.log(cmd);
     return this.client.send<number>({ cmd }, data);
   }
 
@@ -63,12 +75,13 @@ export class MqttController {
 
   @Post('notify')
   async sendNotification(): Promise<any> {
-    return this.client.emit<number>('notification', true);
+    await this.client.emit<number>('notification', true);
+    return true;
   }
 
   @Post('wildcard-event')
   async sendWildcardEvent(): Promise<any> {
-    return this.client.emit<number>('wildcard-event/test', true);
+    await this.client.emit<number>('wildcard-event/test', true);
   }
 
   @Post('wildcard-message')
@@ -81,7 +94,7 @@ export class MqttController {
 
   @Post('wildcard-event2')
   async sendWildcardEvent2(): Promise<any> {
-    return this.client.emit<number>('wildcard-event2/test/test', true);
+    await this.client.emit<number>('wildcard-event2/test/test', true);
   }
 
   @Post('wildcard-message2')
@@ -147,6 +160,7 @@ export class MqttController {
 
   @EventPattern('wildcard-event/#')
   wildcardEventHandler(data: boolean) {
+    console.log('wildcard-event/#');
     MqttController.IS_WILDCARD_EVENT_RECEIVED = data;
   }
 
@@ -157,6 +171,7 @@ export class MqttController {
 
   @EventPattern('wildcard-event2/+/test')
   wildcardEventHandler2(data: boolean) {
+    console.log('wildcard-event2/+/test');
     MqttController.IS_WILDCARD2_EVENT_RECEIVED = data;
   }
 
@@ -167,6 +182,9 @@ export class MqttController {
 
   @MessagePattern({ cmd: 'sum' })
   sum(data: number[]): number {
+    const timestamp = new Date().valueOf();
+    console.log(`{ cmd: 'sum' }`, timestamp);
+
     return (data || []).reduce((a, b) => a + b);
   }
 
@@ -182,6 +200,7 @@ export class MqttController {
 
   @MessagePattern({ cmd: 'streaming' })
   streaming(data: number[]): Observable<number> {
+    console.log(` @MessagePattern({ cmd: 'streaming' })`);
     return from(data);
   }
 
